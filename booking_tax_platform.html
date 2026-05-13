@@ -62,18 +62,18 @@ a{cursor:pointer;color:#1a56db;text-decoration:underline}
 .b-gray{background:#f8fafc;color:#6b7280}
 
 /* CONFIG LAYOUT */
-.config-wrap{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 210px)}
+.config-wrap{display:grid;grid-template-columns:600px 1fr;gap:0;min-height:calc(100vh - 210px)}
 .config-main{padding:20px 24px;border-right:1px solid #e4e4e0}
-.config-side{padding:20px;background:#fafaf8}
+.config-side{padding:20px 24px;background:#fafaf8;min-width:0}
 .config-title{font-size:18px;font-weight:700;color:#111;margin-bottom:16px;letter-spacing:-0.02em}
 
 /* AI EXTRACTION */
 .ai-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px;margin-bottom:16px}
 .ai-title{font-size:13px;font-weight:400;color:#1e40af;margin-bottom:12px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
-.fblock{margin-bottom:8px;border:1px solid #d1d5db;border-radius:8px;overflow:hidden;background:#fff}
-.ftop{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f9fafb}
-.flbl{font-size:13px;font-weight:400;color:#6b7280;width:120px;flex-shrink:0}
-.finp{width:140px;flex-shrink:0;font-size:14px;padding:5px 9px;border:1.5px solid #d1d5db;border-radius:6px;background:#fff;color:#111;outline:none;font-family:inherit}
+.fblock{margin-bottom:8px;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;background:#fff}
+.ftop{display:flex;align-items:center;gap:12px;padding:9px 14px;background:#f9fafb}
+.flbl{font-size:13px;font-weight:400;color:#6b7280;width:130px;flex-shrink:0}
+.finp{width:130px;flex-shrink:0;font-size:14px;padding:5px 9px;border:1.5px solid #d1d5db;border-radius:6px;background:#fff;color:#111;outline:none;font-family:inherit}
 .finp.pre{border-color:#93c5fd;background:#eff6ff}
 .finp.changed{border-color:#f59e0b;background:#fffbeb}
 .ctag{font-size:12px;padding:3px 9px;border-radius:20px;flex-shrink:0;font-weight:600}
@@ -91,8 +91,8 @@ a{cursor:pointer;color:#1a56db;text-decoration:underline}
 /* FORM */
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .fl{font-size:11px;color:#9ca3af;font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em}
-.fsel{font-size:14px;padding:7px 10px;border:1.5px solid #d1d5db;border-radius:7px;background:#fff;color:#111;width:100%;font-family:inherit;outline:none}
-.fi{font-size:14px;padding:7px 10px;border:1.5px solid #d1d5db;border-radius:7px;background:#fff;color:#111;width:100%;font-family:inherit;outline:none}
+.fsel{font-size:14px;padding:7px 10px;border:1.5px solid #d1d5db;border-radius:7px;background:#fff;color:#111;width:100%;max-width:280px;font-family:inherit;outline:none}
+.fi{font-size:14px;padding:7px 10px;border:1.5px solid #d1d5db;border-radius:7px;background:#fff;color:#111;width:100%;max-width:280px;font-family:inherit;outline:none}
 
 /* CONFLICT BOX */
 .cbox{border:1.5px solid #fca5a5;border-radius:10px;overflow:hidden;margin:14px 0}
@@ -146,7 +146,7 @@ a{cursor:pointer;color:#1a56db;text-decoration:underline}
 .pm{display:flex;align-items:center;gap:8px;margin-top:5px}
 
 /* VERSION HISTORY */
-.vrow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #e2e8f0;font-size:14px}
+.vrow{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 0;border-bottom:1px solid #e2e8f0;font-size:14px}
 .vrow:last-child{border-bottom:none}
 .vdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 
@@ -517,8 +517,7 @@ a{cursor:pointer;color:#1a56db;text-decoration:underline}
         <div id="sidebar-de">
           <div class="side-title">📜 Version history</div>
           <div id="vh-override">
-            <div class="vrow"><div class="vdot" style="background:#16a34a"></div><span style="font-weight:600;color:#111">v2 — pending</span><span style="color:#6b7280;flex:1;margin-left:8px;font-size:13px">Rate: 21% · Effective 1 Aug 2026</span><span style="font-size:12px;color:#94a3b8">Today</span></div>
-            <div class="vrow"><div class="vdot" style="background:#1a56db"></div><span style="font-weight:400;color:#6b7280">v1 — active</span><span style="color:#6b7280;flex:1;margin-left:8px;font-size:13px">Rate: 19% · Since Jan 2020</span><span style="font-size:12px;color:#94a3b8">Archived on publish</span></div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><div class="vdot" style="background:#16a34a"></div><span style="font-size:13px;font-weight:600;color:#111">v2 — pending</span><span style="font-size:12px;color:#94a3b8;margin-left:auto">Today</span></div><div style="font-size:12px;color:#6b7280;padding-left:16px;margin-bottom:10px">Rate: 21% · Effective 1 Aug 2026</div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><div class="vdot" style="background:#1a56db"></div><span style="font-size:13px;color:#6b7280">v1 — active</span><span style="font-size:12px;color:#b0b8c4;margin-left:auto">Archived on publish</span></div><div style="font-size:12px;color:#b0b8c4;padding-left:16px">Rate: 19% · Since Jan 2020</div>
           </div>
           <div id="vh-extend" style="display:none">
             <div class="vrow"><div class="vdot" style="background:#16a34a"></div><span style="font-weight:700">DE-VAT-B2B-2020 — updated in place</span><span style="color:#6b7280;flex:1;margin-left:8px;font-size:13px">Rate 19%→21% · Effective 1 Aug 2026</span></div>
@@ -526,11 +525,11 @@ a{cursor:pointer;color:#1a56db;text-decoration:underline}
           </div>
           <div style="margin-top:20px">
             <div class="side-title">🌍 Jurisdiction context</div>
-            <div style="font-size:13px;color:#6b7280;line-height:1.8">
-              <div><strong style="color:#111">Standard VAT:</strong> 19% → 21% from 1 Aug 2026</div>
-              <div><strong style="color:#111">B2B reverse charge:</strong> Applicable for EU entities</div>
-              <div><strong style="color:#111">Digital services threshold:</strong> €10,000 annual</div>
-              <div><strong style="color:#111">Treaty network:</strong> 96 active treaties</div>
+            <div style="font-size:13px;color:#6b7280;line-height:2">
+              <div>Standard VAT: 19% → 21% · 1 Aug 2026</div>
+              <div>B2B reverse charge: applicable for EU entities</div>
+              <div>Digital services threshold: €10,000 annual</div>
+              <div>Treaty network: 96 active treaties</div>
             </div>
           </div>
           <div style="margin-top:20px">
