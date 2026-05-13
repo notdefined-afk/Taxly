@@ -23,10 +23,10 @@ a{cursor:pointer;color:#1a56db;text-decoration:underline}
 .role-sel{font-size:14px;padding:4px 10px;border:1px solid #93c5fd;border-radius:6px;background:#fff;color:#1e40af;font-weight:600;cursor:pointer;outline:none}
 
 /* INTERNAL TABS */
-.itabs{display:flex;background:#fff;border-bottom:1px solid #e4e4e0;padding:0 24px}
-.itab{padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;color:#888;border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:all 0.15s;display:flex;align-items:center;gap:8px}
-.itab.on{color:#1a56db;border-bottom-color:#1a56db}
-.itab:hover:not(.on){color:#111;background:#f8f8f6}
+.itabs{display:flex;background:#fff;border-bottom:1px solid #e4e4e0;padding:10px 24px;gap:6px}
+.itab{padding:7px 18px;font-size:14px;font-weight:500;cursor:pointer;color:#6b7280;border-radius:20px;border:1.5px solid transparent;transition:all 0.15s;display:flex;align-items:center;gap:8px;background:transparent}
+.itab.on{color:#1a56db;background:#eff6ff;border-color:#bfdbfe;font-weight:600}
+.itab:hover:not(.on){color:#111;background:#f1f5f9}
 
 /* CONTEXT / SCREEN VISIBILITY */
 .ctx{display:none}.ctx.active{display:block}
@@ -71,9 +71,9 @@ a{cursor:pointer;color:#1a56db;text-decoration:underline}
 .ai-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px;margin-bottom:16px}
 .ai-title{font-size:13px;font-weight:400;color:#1e40af;margin-bottom:12px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
 .fblock{margin-bottom:8px;border:1px solid #d1d5db;border-radius:8px;overflow:hidden;background:#fff}
-.ftop{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f9fafb}
+.ftop{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#f9fafb}
 .flbl{font-size:13px;font-weight:400;color:#6b7280;width:120px;flex-shrink:0}
-.finp{flex:1;font-size:14px;padding:5px 9px;border:1.5px solid #d1d5db;border-radius:6px;background:#fff;color:#111;outline:none;font-family:inherit}
+.finp{width:140px;flex-shrink:0;font-size:14px;padding:5px 9px;border:1.5px solid #d1d5db;border-radius:6px;background:#fff;color:#111;outline:none;font-family:inherit}
 .finp.pre{border-color:#93c5fd;background:#eff6ff}
 .finp.changed{border-color:#f59e0b;background:#fffbeb}
 .ctag{font-size:12px;padding:3px 9px;border-radius:20px;flex-shrink:0;font-weight:600}
@@ -362,7 +362,7 @@ a{cursor:pointer;color:#1a56db;text-decoration:underline}
               <div class="fwarn" id="f0-warn-date" style="display:none">⚠️ Changed from extracted date. Legal will verify before publishing.</div>
             </div>
             <div class="fblock">
-              <div class="ftop"><span class="flbl">Entity scope</span><select class="finp" id="f0-scope" style="border-color:#f59e0b;background:#fffbeb"><option value="b2b-digital">B2B digital services</option><option value="b2b-all">B2B all services</option><option value="b2c-digital">B2C digital services</option></select><span class="ctag c-md">Review needed</span></div>
+              <div class="ftop"><span class="flbl">Entity scope</span><select class="finp" id="f0-scope" style="border-color:#f59e0b;background:#fffbeb;width:260px"><option value="b2b-digital">B2B digital services</option><option value="b2b-all">B2B all services</option><option value="b2c-digital">B2C digital services</option></select><span class="ctag c-md">Review needed</span></div>
               <div class="frev">⚠️ Physical goods exclusion is ambiguous in source document. Confirm scope with legal before publishing.</div>
             </div>
           </div>
@@ -444,7 +444,7 @@ a{cursor:pointer;color:#1a56db;text-decoration:underline}
             <div class="fblock"><div class="ftop"><span class="flbl">New WHT threshold</span><input class="finp pre" id="f1-thresh" type="number" value="600" oninput="flagChanged(this,'600','f1-warn-thresh','f1-src-thresh')"><span class="ctag c-hi">High confidence</span></div><div class="fsrc" id="f1-src-thresh">📄 IRS Notice 2026-14, Section 3(b) · <a>view source</a></div><div class="fwarn" id="f1-warn-thresh" style="display:none">⚠️ Changed from extracted value of $600. Legal will verify.</div></div>
             <div class="fblock"><div class="ftop"><span class="flbl">WHT rate</span><input class="finp pre" id="f1-rate" type="number" value="30" oninput="flagChanged(this,'30','f1-warn-rate','f1-src-rate')"><span class="ctag c-hi">High confidence</span></div><div class="fsrc" id="f1-src-rate">📄 IRC §1441, confirmed in Notice 2026-14 · <a>view source</a></div><div class="fwarn" id="f1-warn-rate" style="display:none">⚠️ Changed from extracted value of 30%.</div></div>
             <div class="fblock"><div class="ftop"><span class="flbl">Effective date</span><input class="finp pre" id="f1-date" type="date" value="2026-10-01" oninput="flagChanged(this,'2026-10-01','f1-warn-date','f1-src-date')"><span class="ctag c-hi">High confidence</span></div><div class="fsrc" id="f1-src-date">📄 Notice 2026-14, Section 5 · <a>view source</a></div><div class="fwarn" id="f1-warn-date" style="display:none">⚠️ Changed from extracted date.</div></div>
-            <div class="fblock"><div class="ftop"><span class="flbl">Treaty eligible</span><select class="finp" style="border-color:#f59e0b;background:#fffbeb"><option>Yes — W-8BEN required</option><option>No</option></select><span class="ctag c-md">Review needed</span></div><div class="frev">⚠️ Treaty eligibility varies by partner country. Confirm with legal which treaty networks apply.</div></div>
+            <div class="fblock"><div class="ftop"><span class="flbl">Treaty eligible</span><select class="finp" style="border-color:#f59e0b;background:#fffbeb;width:260px"><option>Yes — W-8BEN required</option><option>No</option></select><span class="ctag c-md">Review needed</span></div><div class="frev">⚠️ Treaty eligibility varies by partner country. Confirm with legal which treaty networks apply.</div></div>
           </div>
           <div class="ig">
             <div class="ic"><div class="in">8,400</div><div class="il">Partners affected</div></div>
@@ -559,12 +559,12 @@ a{cursor:pointer;color:#1a56db;text-decoration:underline}
             <div class="brow" style="background:#f8fafc;padding:8px 16px">
               <div class="bn-n" style="font-size:11px;color:#b0b8c4;font-weight:500;text-transform:uppercase;letter-spacing:0.06em">Brand</div>
               <div style="flex:1;font-size:11px;color:#b0b8c4;font-weight:500;text-transform:uppercase;letter-spacing:0.06em">Status</div>
-              <div style="width:80px;font-size:11px;color:#b0b8c4;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;text-align:right">Coverage</div>
+              <div style="width:120px;font-size:11px;color:#b0b8c4;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;text-align:right">Rules configured</div>
             </div>
-            <div class="brow"><div class="bn-n">Booking.com</div><div class="jpills"><span class="jp" style="background:#dcfce7;color:#166534">DE ✓</span><span class="jp" style="background:#dcfce7;color:#166534">US ✓</span><span class="jp" style="background:#dcfce7;color:#166534">IN ✓</span><span class="jp" style="background:#fef3c7;color:#92400e">DE v2 pending</span></div><div style="text-align:right"><div class="pbw" style="margin-left:auto"><div class="pbf" style="width:92%;background:#16a34a"></div></div><div style="font-size:13px;color:#6b7280;margin-top:3px;font-weight:600">92%</div></div></div>
-            <div class="brow"><div class="bn-n">Agoda</div><div class="jpills"><span class="jp" style="background:#fee2e2;color:#991b1b">DE ✗</span><span class="jp" style="background:#dcfce7;color:#166534">US ✓</span><span class="jp" style="background:#dcfce7;color:#166534">IN ✓</span></div><div style="text-align:right"><div class="pbw" style="margin-left:auto"><div class="pbf" style="width:71%;background:#d97706"></div></div><div style="font-size:13px;color:#6b7280;margin-top:3px;font-weight:600">71%</div></div></div>
-            <div class="brow"><div class="bn-n">Priceline</div><div class="jpills"><span class="jp" style="background:#fee2e2;color:#991b1b">DE ✗</span><span class="jp" style="background:#fef3c7;color:#92400e">US pending</span><span class="jp" style="background:#dcfce7;color:#166534">IN ✓</span></div><div style="text-align:right"><div class="pbw" style="margin-left:auto"><div class="pbf" style="width:58%;background:#dc2626"></div></div><div style="font-size:13px;color:#6b7280;margin-top:3px;font-weight:600">58%</div></div></div>
-            <div class="brow"><div class="bn-n">KAYAK</div><div class="jpills"><span class="jp" style="background:#dcfce7;color:#166534">DE ✓</span><span class="jp" style="background:#dcfce7;color:#166534">US ✓</span><span class="jp" style="background:#fef3c7;color:#92400e">IN pending</span></div><div style="text-align:right"><div class="pbw" style="margin-left:auto"><div class="pbf" style="width:85%;background:#16a34a"></div></div><div style="font-size:13px;color:#6b7280;margin-top:3px;font-weight:600">85%</div></div></div>
+            <div class="brow"><div class="bn-n">Booking.com</div><div class="jpills"><span class="jp" style="background:#fef3c7;color:#92400e">DE — update pending</span><span class="jp" style="background:#dcfce7;color:#166534">US ✓</span><span class="jp" style="background:#dcfce7;color:#166534">IN ✓</span></div><div style="text-align:right;width:120px"><div style="font-size:13px;color:#6b7280">3 of 3 rules live</div></div></div>
+            <div class="brow"><div class="bn-n">Agoda</div><div class="jpills"><span class="jp" style="background:#fee2e2;color:#991b1b">DE ✗</span><span class="jp" style="background:#dcfce7;color:#166534">US ✓</span><span class="jp" style="background:#dcfce7;color:#166534">IN ✓</span></div><div style="text-align:right;width:120px"><div style="font-size:13px;color:#d97706">2 of 3 — DE missing</div></div></div>
+            <div class="brow"><div class="bn-n">Priceline</div><div class="jpills"><span class="jp" style="background:#fee2e2;color:#991b1b">DE ✗</span><span class="jp" style="background:#fef3c7;color:#92400e">US pending</span><span class="jp" style="background:#dcfce7;color:#166534">IN ✓</span></div><div style="text-align:right;width:120px"><div style="font-size:13px;color:#dc2626">1 of 3 — DE, US gaps</div></div></div>
+            <div class="brow"><div class="bn-n">KAYAK</div><div class="jpills"><span class="jp" style="background:#dcfce7;color:#166534">DE ✓</span><span class="jp" style="background:#dcfce7;color:#166534">US ✓</span><span class="jp" style="background:#fef3c7;color:#92400e">IN pending</span></div><div style="text-align:right;width:120px"><div style="font-size:13px;color:#d97706">2 of 3 — IN pending</div></div></div>
           </div>
           <div class="rtable">
             <div class="rtable-hd"><span class="rtable-title">Pending changes — action required</span></div>
