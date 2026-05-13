@@ -62,13 +62,13 @@ a{cursor:pointer;color:#1a56db;text-decoration:underline}
 .b-gray{background:#f8fafc;color:#6b7280}
 
 /* CONFIG LAYOUT */
-.config-wrap{display:grid;grid-template-columns:600px 1fr;gap:0;min-height:calc(100vh - 210px)}
+.config-wrap{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:0;min-height:calc(100vh - 210px)}
 .config-main{padding:20px 24px;border-right:1px solid #e4e4e0}
 .config-side{padding:20px 24px;background:#fafaf8;min-width:0}
 .config-title{font-size:18px;font-weight:700;color:#111;margin-bottom:16px;letter-spacing:-0.02em}
 
 /* AI EXTRACTION */
-.ai-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px;margin-bottom:16px}
+.ai-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px;margin-bottom:16px;max-width:560px}
 .ai-title{font-size:13px;font-weight:400;color:#1e40af;margin-bottom:12px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
 .fblock{margin-bottom:8px;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;background:#fff}
 .ftop{display:flex;align-items:center;gap:12px;padding:9px 14px;background:#f9fafb}
@@ -83,16 +83,16 @@ a{cursor:pointer;color:#1a56db;text-decoration:underline}
 .frev{padding:5px 12px;font-size:12px;color:#92400e;background:#fef9c3;display:flex;align-items:center;gap:5px;border-top:1px solid #fde047}
 
 /* IMPACT GRID */
-.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;max-width:560px}
 .ic{background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:12px;text-align:center}
 .in{font-size:22px;font-weight:700;color:#111;letter-spacing:-0.03em}
 .il{font-size:12px;color:#64748b;margin-top:3px;font-weight:500}
 
 /* FORM */
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;max-width:560px}
 .fl{font-size:11px;color:#9ca3af;font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em}
-.fsel{font-size:14px;padding:7px 10px;border:1.5px solid #d1d5db;border-radius:7px;background:#fff;color:#111;width:100%;max-width:280px;font-family:inherit;outline:none}
-.fi{font-size:14px;padding:7px 10px;border:1.5px solid #d1d5db;border-radius:7px;background:#fff;color:#111;width:100%;max-width:280px;font-family:inherit;outline:none}
+.fsel{font-size:14px;padding:7px 10px;border:1.5px solid #d1d5db;border-radius:7px;background:#fff;color:#111;width:100%;font-family:inherit;outline:none}
+.fi{font-size:14px;padding:7px 10px;border:1.5px solid #d1d5db;border-radius:7px;background:#fff;color:#111;width:100%;font-family:inherit;outline:none}
 
 /* CONFLICT BOX */
 .cbox{border:1.5px solid #fca5a5;border-radius:10px;overflow:hidden;margin:14px 0}
@@ -686,9 +686,9 @@ function switchCtx(c){
 }
 function switchITab(name,el){
   document.querySelectorAll('.isc').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.itab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.itab').forEach(t=>t.classList.remove('on'));
   document.getElementById('isc-'+name).classList.add('active');
-  el.classList.add('active');
+  el.classList.add('on');
 }
 function setRole(r){role=r;renderP0();renderP1();}
 function renderP0(){
