@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Booking Holdings — Global Tax Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;font-size:14px;color:#1a1a1a;background:#f4f4f1;min-height:100vh}
+.app{max-width:1200px;margin:0 auto;background:#fff;min-height:100vh;box-shadow:0 0 40px rgba(0,0,0,0.08)}
+
+/* Context switcher */
+.ctx-bar{display:flex;border-bottom:1.5px solid #e4e4e0;background:#fff;position:sticky;top:0;z-index:50}
+.ctx-btn{padding:14px 26px;font-size:14px;font-weight:600;cursor:pointer;color:#888;border-bottom:3px solid transparent;margin-bottom:-1.5px;transition:all 0.15s;display:flex;align-items:center;gap:8px;letter-spacing:-0.01em}
+.ctx-btn.ai{color:#0C447C;border-bottom-color:#185FA5;background:#f0f6fd}
+.ctx-btn.am{color:#27500A;border-bottom-color:#5a8f1e;background:#f2f8ea}
+.ctx-btn:hover:not(.ai):not(.am){background:#f8f8f5;color:#1a1a1a}
+.ctx{display:none}.ctx.active{display:block}
+
+/* Role strip */
+.role-strip{display:flex;align-items:center;gap:10px;padding:7px 18px;background:#e8f2fc;border-bottom:1px solid #b8d4f0;font-size:12px;color:#0C447C;font-weight:500}
+.rsel{font-size:12px;padding:3px 9px;border:1px solid #a0c4f0;border-radius:6px;background:#fff;color:#0C447C;font-weight:600;cursor:pointer}
+
+/* Internal tabs */
+.itabs{display:flex;border-bottom:1px solid #e4e4e0;background:#fff}
+.itab{padding:11px 20px;font-size:13px;font-weight:600;cursor:pointer;color:#888;border-bottom:2.5px solid transparent;transition:all 0.15s;display:flex;align-items:center;gap:7px}
+.itab.on{color:#185FA5;border-bottom-color:#185FA5}
+.itab:hover:not(.on){color:#1a1a1a;background:#f8f8f5}
+
+/* Screens */
+.isc{display:none}.isc.active{display:block}
+.queue-bar{padding:14px 24px;background:#fafaf8;border-bottom:1.5px solid #e4e4e0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.queue-bar .qi{flex:1;min-width:200px;margin-bottom:0;background:#fff}
+.queue-bar .qi.sel{background:#f0f6fd}
+.queue-controls{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.config-section{padding:24px 28px;max-width:860px}
+
+/* Typography */
+.SL{font-size:12px;font-weight:700;color:#999;margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:0.08em}
+.panel-title{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:14px;letter-spacing:-0.02em}
+
+/* Cards */
+.card{background:#fff;border:1px solid #e4e4e0;border-radius:10px;padding:18px;margin-bottom:14px}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+
+/* Badges */
+.badge{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600;white-space:nowrap}
+.bw{background:#fdf0da;color:#7a4500}.bd{background:#fde6e6;color:#8c1a1a}.bs{background:#e6f5d4;color:#2a5c06}.bi{background:#deedf8;color:#0a3d6e}.bn{background:#efefec;color:#555}
+
+/* Queue items */
+.qi{border:1px solid #e8e8e4;border-radius:9px;padding:12px 14px;margin-bottom:9px;cursor:pointer;transition:all 0.2s;background:#f4f4f1;opacity:0.45}
+.qi:hover{opacity:0.75;border-color:#ccc}
+.qi.sel{border-color:#185FA5;border-width:2px;background:#f0f6fd;opacity:1;box-shadow:0 2px 8px rgba(24,95,165,0.12)}
+.qi-top{display:flex;gap:6px;margin-bottom:7px;flex-wrap:wrap;align-items:center}
+.qi-title{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:4px;letter-spacing:-0.01em}
+.qi-meta{display:flex;gap:12px;font-size:13px;color:#777}
+
+/* Search */
+.search-wrap{position:relative;margin-bottom:9px}
+.search-wrap input{width:100%;font-size:14px;padding:9px 11px 9px 34px;border:1px solid #e4e4e0;border-radius:8px;background:#fff;color:#1a1a1a;outline:none;transition:border-color 0.15s}
+.search-wrap input:focus{border-color:#185FA5}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:15px;color:#bbb}
+.fpill{font-size:13px;padding:5px 12px;border-radius:20px;border:1px solid #e4e4e0;cursor:pointer;color:#777;background:#fff;font-weight:500;transition:all 0.15s}
+.fpill.on{background:#185FA5;color:#fff;border-color:#185FA5}
+
+/* Impact grid */
+.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:13px 0}
+.ic{background:#f8f8f5;border-radius:9px;padding:13px;text-align:center;border:1px solid #eeeeea;transition:all 0.2s}
+.in{font-size:22px;font-weight:700;color:#1a1a1a;letter-spacing:-0.03em}
+.il{font-size:11px;color:#777;margin-top:3px;font-weight:500}
+
+/* AI extraction box */
+.ai-box{background:#e8f2fc;border:1px solid #a8ccf0;border-radius:10px;padding:16px;margin-bottom:16px}
+.ai-hd{font-size:13px;font-weight:600;color:#0C447C;margin-bottom:12px;display:flex;align-items:flex-start;gap:7px;line-height:1.5}
+.field-block{margin-bottom:10px;border:1px solid #d4d4d0;border-radius:8px;overflow:hidden;background:#fff}
+.field-top{display:flex;align-items:center;gap:9px;padding:8px 12px;background:#f8f8f5}
+.field-lbl{font-size:12px;font-weight:600;color:#555;width:110px;flex-shrink:0}
+.field-inp{flex:1;font-size:13px;padding:5px 9px;border:1px solid #d0d0cc;border-radius:6px;background:#fff;color:#1a1a1a;outline:none;font-family:'DM Sans',sans-serif}
+.field-inp.pre{border-color:#a8ccf0;background:#eef5fc}
+.field-inp.changed{border-color:#d4891a;background:#fdf5e4}
+.conf{font-size:11px;padding:2px 8px;border-radius:20px;flex-shrink:0;font-weight:600}
+.ch{background:#e6f5d4;color:#2a5c06}.cm{background:#fdf0da;color:#7a4500}
+.field-src{padding:6px 12px;font-size:12px;color:#185FA5;background:#f0f6fd;display:flex;align-items:center;gap:5px;font-weight:500}
+.field-src a{cursor:pointer;text-decoration:underline}
+.field-warn{padding:6px 12px;font-size:12px;color:#7a4500;background:#fdf5e4;display:flex;align-items:center;gap:5px;border-top:1px solid #f5d88a}
+.field-review{padding:6px 12px;font-size:12px;color:#7a4500;background:#fdf0da;display:flex;align-items:center;gap:5px;border-top:1px solid #f5c870}
+
+/* Form elements */
+.fsel{font-size:13px;padding:7px 9px;border:1px solid #d4d4d0;border-radius:7px;background:#fff;color:#1a1a1a;width:100%;font-family:'DM Sans',sans-serif;outline:none}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+.fl{font-size:12px;color:#666;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em}
+.fi{font-size:13px;padding:7px 9px;border:1px solid #d4d4d0;border-radius:7px;background:#fff;color:#1a1a1a;width:100%;font-family:'DM Sans',sans-serif;outline:none}
+
+/* Conflict box */
+.conflict-box{border:1.5px solid #f09090;border-radius:10px;overflow:hidden;margin:15px 0}
+.conflict-hd{background:#fde6e6;padding:13px 16px}
+.conflict-title{font-size:14px;font-weight:700;color:#8c1a1a;margin-bottom:5px;display:flex;align-items:center;gap:7px;letter-spacing:-0.01em}
+.conflict-exp{font-size:13px;color:#6b1010;line-height:1.65}
+.conflict-compare{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #f09090}
+.cc-col{padding:13px 16px}
+.cc-col.old{background:#fff8f8}.cc-col.new{background:#f8fff4}
+.cc-head{font-size:11px;font-weight:700;margin-bottom:9px;text-transform:uppercase;letter-spacing:0.06em}
+.cc-head.old{color:#8c1a1a}.cc-head.new{color:#2a5c06}
+.cc-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.05)}
+.cc-row:last-child{border-bottom:none}
+.cc-k{color:#777}.cc-v{font-weight:600;color:#1a1a1a}
+.conflict-actions{border-top:1px solid #f09090;padding:13px 16px;background:#fff;display:flex;gap:9px;align-items:flex-start;flex-wrap:wrap}
+.btn-override{font-size:13px;padding:8px 17px;border-radius:7px;border:none;background:#8c1a1a;color:#fff;cursor:pointer;font-weight:600;font-family:'DM Sans',sans-serif}
+.btn-merge{font-size:13px;padding:8px 17px;border-radius:7px;border:1.5px solid #f09090;background:#fff;color:#8c1a1a;cursor:pointer;font-weight:600;font-family:'DM Sans',sans-serif}
+.conflict-note{font-size:12px;color:#777;line-height:1.55;flex:1}
+
+/* Gates */
+.gates-title{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:11px;letter-spacing:-0.02em}
+.gate{display:flex;align-items:flex-start;gap:11px;padding:12px 14px;border-radius:9px;margin-bottom:8px}
+.gate.done{background:#e6f5d4}.gate.wait{background:#fdf0da}.gate.locked{background:#f0f0ec}
+.gate-ico{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;margin-top:1px;font-weight:700}
+.gi-done{background:#3d8010;color:#fff}.gi-wait{background:#c07010;color:#fff}.gi-lock{background:#bbb;color:#fff}
+.gate-q{font-size:13px;font-weight:700;margin-bottom:3px;letter-spacing:-0.01em}
+.gate-q.done{color:#2a5c06}.gate-q.wait{color:#6b3a00}.gate-q.locked{color:#999}
+.gate-sub{font-size:12px;color:#666;line-height:1.55}
+
+/* Buttons */
+.bp{font-size:14px;padding:10px 22px;border-radius:8px;border:none;background:#185FA5;color:#fff;cursor:pointer;font-weight:700;display:flex;align-items:center;gap:7px;box-shadow:0 0 0 3px #c0d8f0;font-family:'DM Sans',sans-serif;letter-spacing:-0.01em;transition:all 0.15s}
+.bp:hover{background:#1050900}
+.bp:disabled{background:#a8c8e8;box-shadow:none;cursor:not-allowed}
+.bsec{font-size:13px;padding:8px 16px;border-radius:7px;border:1px solid #d4d4d0;background:#fff;color:#1a1a1a;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
+.bsec:hover{background:#f8f8f5}
+.bred{font-size:13px;padding:8px 16px;border-radius:7px;border:none;background:#fde6e6;color:#8c1a1a;cursor:pointer;font-weight:600;font-family:'DM Sans',sans-serif}
+.ar{display:flex;gap:9px;margin-top:15px;flex-wrap:wrap;align-items:center}
+
+/* Propagation */
+.staged{display:flex;gap:5px;margin:11px 0;align-items:center}
+.sb{flex:1;padding:9px 5px;border-radius:9px;border:1px solid #e4e4e0;font-size:12px;text-align:center;line-height:1.5;font-weight:500}
+.sb.done{background:#e6f5d4;border-color:#7ab840;color:#2a5c06}
+.sb.go{background:#deedf8;border-color:#185FA5;color:#0a3d6e}
+.sb.wait{background:#f8f8f5;color:#aaa}
+.sa{font-size:13px;color:#ccc}
+
+.prop-step{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid #e8e8e4}
+.prop-step:last-child{border-bottom:none}
+.pico{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px}
+.pt{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:3px;letter-spacing:-0.01em}
+.pd{font-size:12px;color:#666;line-height:1.55}
+.pm{display:flex;align-items:center;gap:8px;margin-top:6px}
+
+/* Version history */
+.vrow{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid #e8e8e4;font-size:13px}
+.vrow:last-child{border-bottom:none}
+.vdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* Toasts */
+.toast{border-radius:9px;padding:11px 15px;font-size:13px;display:none;align-items:center;gap:9px;margin-bottom:13px;font-weight:500}
+.toast.show{display:flex}
+.ts-t{background:#e6f5d4;border:1px solid #7ab840;color:#2a5c06}
+
+/* Rollup */
+.rm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:18px}
+.rmc{background:#fff;border:1px solid #e4e4e0;border-radius:10px;padding:15px}
+.rmn{font-size:26px;font-weight:700;color:#1a1a1a;letter-spacing:-0.04em}
+.rml{font-size:12px;color:#777;margin-top:3px;font-weight:500}
+.brow{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid #e8e8e4;font-size:13px}
+.brow:last-child{border-bottom:none}
+.bn-n{font-weight:700;color:#1a1a1a;width:110px;flex-shrink:0;letter-spacing:-0.01em}
+.jpills{display:flex;gap:5px;flex:1;flex-wrap:wrap}
+.jp{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.pbw{width:66px;height:6px;background:#e8e8e4;border-radius:20px;overflow:hidden;flex-shrink:0}
+.pbf{height:100%;border-radius:20px}
+.etable{width:100%;font-size:13px;border-collapse:collapse;table-layout:fixed}
+.etable th{font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.06em;padding:8px 10px;text-align:left;border-bottom:1.5px solid #e4e4e0}
+.etable td{padding:10px;border-bottom:1px solid #e8e8e4;color:#1a1a1a;font-size:13px}
+.etable tr:last-child td{border-bottom:none}
+
+/* Merchant portal */
+.m-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:#f0f8e8;border-bottom:1px solid #b4d988}
+.mav{width:36px;height:36px;border-radius:50%;background:#b8da8a;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#27500A;flex-shrink:0}
+.pr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #e8e8e4;font-size:14px}
+.pr:last-child{border-bottom:none}
+.pl{color:#666;font-weight:500}.pv{font-weight:600;color:#1a1a1a}.pn{color:#8c1a1a;font-weight:600}.pp{color:#2a5c06;font-weight:600}
+.ocard{border:1px solid #e4e4e0;border-radius:10px;padding:15px;margin-bottom:10px;display:flex;gap:13px;background:#fff}
+.oico{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.ot{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:4px;letter-spacing:-0.01em}
+.od{font-size:12px;color:#666;line-height:1.55}
+.ov{font-size:13px;font-weight:700;color:#2a5c06;margin-top:5px}
+.cert-steps{display:flex;align-items:center;gap:4px;margin-top:8px}
+.cs{flex:1;text-align:center;font-size:11px;padding:5px;border-radius:7px;font-weight:600}
+.cs.done{background:#e6f5d4;color:#2a5c06}.cs.go{background:#deedf8;color:#0a3d6e}.cs.todo{background:#f0f0ec;color:#aaa}
+.hrow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #e8e8e4;font-size:13px}
+.hrow:last-child{border-bottom:none}
+
+/* Empty state */
+.empty-state{text-align:center;padding:28px 14px;color:#aaa}
+.empty-state .empty-icon{font-size:32px;display:block;margin-bottom:10px}
+.empty-title{font-size:14px;font-weight:600;color:#888;margin-bottom:5px}
+.empty-desc{font-size:12px;color:#aaa;line-height:1.6;max-width:220px;margin:0 auto 12px}
+
+/* Role note */
+.role-note{background:#f8f8f5;border-radius:8px;padding:10px 13px;font-size:12px;color:#666;margin-top:11px;display:flex;align-items:center;gap:8px;border:1px solid #e4e4e0;font-weight:500}
+
+/* Modals */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:14px;padding:26px;max-width:440px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,0.2)}
+.modal-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:9px;letter-spacing:-0.02em}
+.modal-body{font-size:13px;color:#555;line-height:1.65;margin-bottom:18px}
+.modal-actions{display:flex;gap:9px}
+.rstep{display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #e8e8e4}
+.rstep:last-child{border-bottom:none}
+.rstep-num{width:26px;height:26px;border-radius:50%;background:#deedf8;color:#0a3d6e;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.rstep-title{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:3px}
+.rstep-desc{font-size:12px;color:#666;line-height:1.55}
+.dispute-ref{background:#f0f6fd;border:1px solid #a8ccf0;border-radius:9px;padding:13px 15px;margin-bottom:14px}
+.treaty-result{background:#e6f5d4;border:1px solid #7ab840;border-radius:9px;padding:13px 15px;margin-bottom:12px}
+
+/* Notice */
+.notice{border-radius:9px;padding:11px 13px;margin-top:13px;font-size:13px;font-weight:500}
+
+/* Success boxes */
+.success-box{background:#e6f5d4;border:1px solid #7ab840;border-radius:10px;padding:15px;margin-bottom:15px;display:flex;align-items:flex-start;gap:12px}
+</style>
+</head>
+<body>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-dispute">
+  <div class="modal">
+    <div class="modal-title">Dispute submitted</div>
+    <div class="modal-body">
+      <div class="dispute-ref">
+        <div style="font-size:11px;font-weight:700;color:#777;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px">Reference number</div>
+        <div style="font-size:22px;font-weight:700;color:#0C447C;font-family:'DM Mono',monospace;letter-spacing:-0.01em">DSP-2026-00482</div>
+        <div style="font-size:12px;color:#666;margin-top:8px">Hotel Gruppe München GmbH · June 2026 payout · Raised just now</div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:9px">What happens next</div>
+      <div style="font-size:12px;color:#555;line-height:1.8">
+        <div style="margin-bottom:4px">✓ Logged and assigned to our tax compliance team</div>
+        <div style="margin-bottom:4px">⏱ Response within <strong>5 business days</strong></div>
+        <div style="margin-bottom:4px">📧 Updates sent to your registered email</div>
+        <div>🔍 Track using reference DSP-2026-00482</div>
+      </div>
+    </div>
+    <div class="modal-actions"><button class="bp" style="font-size:13px;padding:8px 18px;box-shadow:none" onclick="closeModal('modal-dispute')">Done</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-reconcile">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-title">Reconciliation workflow — Agoda Thailand · DE gap</div>
+    <div style="font-size:13px;color:#666;margin-bottom:15px;line-height:1.55">2,840 transactions were processed at the wrong VAT rate during the Germany configuration gap. Here is the 4-step process to resolve this.</div>
+    <div class="rstep"><div class="rstep-num">1</div><div><div class="rstep-title">System identifies all affected transactions</div><div class="rstep-desc">2,840 transactions flagged · Total variance: €1.2M · Date range: gap period only</div></div></div>
+    <div class="rstep"><div class="rstep-num">2</div><div><div class="rstep-title">Finance reviews and approves correction batch</div><div class="rstep-desc">Finance lead confirms the variance amount before any corrections are applied</div></div></div>
+    <div class="rstep"><div class="rstep-num">3</div><div><div class="rstep-title">Adjustments applied to next merchant payout</div><div class="rstep-desc">Over- or under-deductions corrected in next payout cycle. Merchants notified with a line-item explanation.</div></div></div>
+    <div class="rstep"><div class="rstep-num">4</div><div><div class="rstep-title">Tax authority filing updated</div><div class="rstep-desc">Corrected figures submitted to German tax authority. Audit trail updated with reconciliation reference.</div></div></div>
+    <div style="margin-top:16px;display:flex;gap:9px"><button class="bp" style="font-size:13px;padding:8px 18px;box-shadow:none">Start reconciliation</button><button class="bsec" onclick="closeModal('modal-reconcile')">Close</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-treaty">
+  <div class="modal">
+    <div class="modal-title">Treaty eligibility result</div>
+    <div class="modal-body">
+      <div class="treaty-result">
+        <div style="font-size:13px;font-weight:700;color:#2a5c06;margin-bottom:6px">✓ Eligible — Germany–Netherlands tax treaty</div>
+        <div style="font-size:12px;color:#333;line-height:1.6">Hotel Gruppe München GmbH has a registered Netherlands entity (HG Benelux BV) that qualifies for the DE-NL treaty. Reduced withholding rate of <strong>5%</strong> applies instead of standard 15%.</div>
+        <div style="font-size:14px;font-weight:700;color:#2a5c06;margin-top:9px">Estimated savings: €640/month</div>
+      </div>
+      To activate: upload your W-8BEN-E form for HG Benelux BV. Our team will verify and apply the reduced rate within 5 business days.
+    </div>
+    <div class="modal-actions">
+      <button class="bp" style="font-size:13px;padding:8px 18px;box-shadow:none" onclick="closeModal('modal-treaty')">Upload W-8BEN-E</button>
+      <button class="bsec" onclick="closeModal('modal-treaty')">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+<div class="ctx-bar">
+  <div class="ctx-btn ai" id="ctx-i" onclick="switchCtx('i')">🏢 Booking Holdings — internal tax ops</div>
+  <div class="ctx-btn" id="ctx-m" onclick="switchCtx('m')">🏪 Merchant portal</div>
+</div>
+
+<!-- INTERNAL CONTEXT -->
+<div class="ctx active" id="ctx-i-panel">
+  <div class="role-strip">
+    <span>👤</span>
+    <span style="font-weight:700">Role:</span>
+    <select class="rsel" onchange="setRole(this.value)">
+      <option value="analyst">Tax analyst — can draft, cannot publish</option>
+      <option value="lead">Compliance lead — can publish</option>
+      <option value="legal">Legal reviewer — sign-off only</option>
+    </select>
+    <span style="margin-left:auto;font-size:11px;color:#185FA5">Permissions enforce automatically per role</span>
+  </div>
+  <div class="itabs">
+    <div class="itab on" onclick="switchITab('queue',this)">📋 Rule engine</div>
+    <div class="itab" onclick="switchITab('rollup',this)">🌍 Group rollup</div>
+  </div>
+
+  <div class="isc active" id="isc-queue">
+    <!-- QUEUE BAR: compact horizontal strip -->
+    <div style="padding:14px 24px 10px;background:#fafaf8;border-bottom:1.5px solid #e4e4e0">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="SL" style="margin:0">📡 Regulatory change queue</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="search-wrap" style="margin:0;width:220px">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search..." oninput="filterQ(this.value)" style="font-size:12px;padding:5px 8px 5px 28px">
+          </div>
+          <span class="fpill on" onclick="setF('all',this)">All</span>
+          <span class="fpill" onclick="setF('action',this)">Action required</span>
+          <span class="fpill" onclick="setF('review',this)">In review</span>
+          <span class="fpill" onclick="setF('done',this)">Configured</span>
+          <span style="font-size:11px;color:#bbb;font-weight:500;margin-left:4px">🔄 12 min ago</span>
+        </div>
+      </div>
+      <div id="qlist" style="display:flex;gap:10px">
+        <div class="qi sel" data-s="action" onclick="selQ(0,this)" style="flex:1;min-width:0;margin-bottom:0">
+          <div class="qi-top"><span class="badge bd">Action required</span><span class="badge bn">Germany · VAT</span></div>
+          <div class="qi-title">B2B digital services VAT 19% → 21%</div>
+          <div class="qi-meta"><span>📅 1 Aug 2026</span><span>⏱ 81 days</span></div>
+        </div>
+        <div class="qi" data-s="review" onclick="selQ(1,this)" style="flex:1;min-width:0;margin-bottom:0">
+          <div class="qi-top"><span class="badge bw">In review</span><span class="badge bn">USA · WHT</span></div>
+          <div class="qi-title">Withholding threshold — foreign accommodation partners</div>
+          <div class="qi-meta"><span>📅 1 Oct 2026</span><span>⏱ 142 days</span></div>
+        </div>
+        <div class="qi" data-s="done" onclick="selQ(2,this)" style="flex:1;min-width:0;margin-bottom:0">
+          <div class="qi-top"><span class="badge bs">Configured</span><span class="badge bn">India · GST</span></div>
+          <div class="qi-title">GST TCS rate revision — e-commerce operators</div>
+          <div class="qi-meta"><span>📅 Effective 1 May 2026</span><span>✅ Live</span></div>
+        </div>
+      </div>
+      <div id="q-empty" style="display:none;padding:10px 0;font-size:13px;color:#aaa">No results found. <button class="bsec" style="font-size:12px;margin-left:6px">+ Add manually</button></div>
+    </div>
+    <div class="config-section" id="right-panel">
+      <div id="t-success" class="toast ts-t">✅ Rule published. Propagation workflow triggered across all brands.</div>
+        <div id="t-legal0" class="toast ts-t" style="display:none">✅ Legal sign-off confirmed by M. Brennan. Publish gate unlocked.</div>
+        <div id="t-legal1" class="toast ts-t" style="display:none">✅ Legal sign-off confirmed. USA WHT rule ready to publish.</div>
+
+        <!-- GERMANY -->
+        <div id="panel-0">
+          <div class="panel-title">Configuring — Germany VAT · B2B digital services</div>
+          <div class="ai-box">
+            <div class="ai-hd">🤖 AI read the Thomson Reuters regulatory circular and pre-filled these fields. Each field shows the source paragraph and confidence level. Any change you make will be flagged for legal review before publishing.</div>
+            <div class="field-block">
+              <div class="field-top">
+                <span class="field-lbl">New VAT rate</span>
+                <input class="field-inp pre" id="f0-rate" type="number" value="21" oninput="flagChanged(this,'21','f0-warn-rate','f0-src-rate')">
+                <span class="conf ch">High confidence</span>
+              </div>
+              <div class="field-src" id="f0-src-rate">📄 §14 UStG amendment, page 3, paragraph 2 · <a>view source</a></div>
+              <div class="field-warn" id="f0-warn-rate" style="display:none">⚠️ Changed from extracted value of 21%. Legal will verify before publishing.</div>
+            </div>
+            <div class="field-block">
+              <div class="field-top">
+                <span class="field-lbl">Effective date</span>
+                <input class="field-inp pre" id="f0-date" type="date" value="2026-08-01" oninput="flagChanged(this,'2026-08-01','f0-warn-date','f0-src-date')">
+                <span class="conf ch">High confidence</span>
+              </div>
+              <div class="field-src" id="f0-src-date">📄 Article 2, paragraph 1 · <a>view source</a></div>
+              <div class="field-warn" id="f0-warn-date" style="display:none">⚠️ Changed from extracted date. Legal will verify before publishing.</div>
+            </div>
+            <div class="field-block">
+              <div class="field-top">
+                <span class="field-lbl">Entity scope</span>
+                <select class="field-inp" id="f0-scope" style="border-color:#d4891a;background:#fdf5e4">
+                  <option value="b2b-digital">B2B digital services</option>
+                  <option value="b2b-all">B2B all services</option>
+                  <option value="b2c-digital">B2C digital services</option>
+                </select>
+                <span class="conf cm">Review needed</span>
+              </div>
+              <div class="field-review">⚠️ Physical goods exclusion is ambiguous in source document. Confirm scope with legal before publishing.</div>
+            </div>
+          </div>
+
+          <div class="ig">
+            <div class="ic"><div class="in" id="i0-m">14,200</div><div class="il">Merchants affected</div></div>
+            <div class="ic"><div class="in" id="i0-d">€2.1M</div><div class="il">Monthly payout delta</div></div>
+            <div class="ic"><div class="in" id="i0-b">3</div><div class="il">Brands in scope</div></div>
+          </div>
+
+          <div class="fg">
+            <div><div class="fl">Entity type</div><select class="fsel" id="f0-entity" onchange="updateImpact(this.value,'entity')"><option value="b2b">B2B</option><option value="b2c">B2C</option><option value="both">Both</option></select></div>
+            <div><div class="fl">Service type</div><select class="fsel" id="f0-service" onchange="updateImpact(this.value,'service')"><option value="digital">Digital services</option><option value="physical">Physical goods</option><option value="accommodation">Accommodation</option></select></div>
+          </div>
+          <div class="fg">
+            <div><div class="fl">Reverse charge</div><select class="fsel"><option>Applicable</option><option>Not applicable</option></select></div>
+            <div><div class="fl">Treaty override eligible</div><select class="fsel"><option>Yes — VAT ID certificate required</option><option>No</option></select></div>
+          </div>
+          <div class="fg">
+            <div><div class="fl">Annual threshold (€)</div><input class="fi" type="number" value="10000"></div>
+            <div><div class="fl">Residency scope</div><select class="fsel"><option>Both</option><option>Domestic only</option><option>Cross-border only</option></select></div>
+          </div>
+
+          <div id="conflict-0" style="display:none">
+            <div class="conflict-box">
+              <div class="conflict-hd">
+                <div class="conflict-title">⚠️ A rule already exists for this transaction type</div>
+                <div class="conflict-exp">Germany already has an active VAT rule for B2B transactions (DE-VAT-B2B-2020). The tax engine cannot have two rules for the same jurisdiction + entity type + tax type — it would not know which rate to apply, causing incorrect deductions for merchants.<br><br>You must decide what happens to the existing rule before the new one can go live.</div>
+              </div>
+              <div class="conflict-compare">
+                <div class="cc-col old">
+                  <div class="cc-head old">Existing rule — will be affected</div>
+                  <div class="cc-row"><span class="cc-k">Rule ID</span><span class="cc-v">DE-VAT-B2B-2020</span></div>
+                  <div class="cc-row"><span class="cc-k">Rate</span><span class="cc-v">19%</span></div>
+                  <div class="cc-row"><span class="cc-k">Active since</span><span class="cc-v">Jan 2020</span></div>
+                  <div class="cc-row"><span class="cc-k">Scope</span><span class="cc-v">All digital services</span></div>
+                  <div class="cc-row"><span class="cc-k">Transactions/mo</span><span class="cc-v">~42,000</span></div>
+                </div>
+                <div class="cc-col new">
+                  <div class="cc-head new">New rule — configuring now</div>
+                  <div class="cc-row"><span class="cc-k">Rule ID</span><span class="cc-v">DE-VAT-B2B-2026</span></div>
+                  <div class="cc-row"><span class="cc-k">Rate</span><span class="cc-v">21%</span></div>
+                  <div class="cc-row"><span class="cc-k">Effective</span><span class="cc-v">1 Aug 2026</span></div>
+                  <div class="cc-row"><span class="cc-k">Scope</span><span class="cc-v">B2B digital services</span></div>
+                  <div class="cc-row"><span class="cc-k">Est. transactions/mo</span><span class="cc-v">~42,000</span></div>
+                </div>
+              </div>
+              <div class="conflict-actions">
+                <button class="btn-override" onclick="resolveConflict('override')">Replace existing rule</button>
+                <button class="btn-merge" onclick="resolveConflict('merge')">Extend existing rule</button>
+                <span class="conflict-note">Replace = old rule deactivated 1 Aug, new rule takes over. Historical transactions remain on old rate for audit.<br>Extend = existing rule DE-VAT-B2B-2020 updated in place. Single rule ID, full history preserved.</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="gates-0" style="display:none;margin:15px 0">
+            <div class="gates-title">Before this rule goes live</div>
+            <div class="gate done" id="g0-c"><div class="gate-ico gi-done">✓</div><div><div class="gate-q done">Has the conflict with the existing rule been resolved?</div><div class="gate-sub" id="g0-c-sub"></div></div></div>
+            <div class="gate wait" id="g0-l"><div class="gate-ico gi-wait">⏱</div><div><div class="gate-q wait">Has legal confirmed this matches the regulation?</div><div class="gate-sub" id="g0-l-sub">Not yet. Legal sign-off needed before this can go to all brands.</div></div></div>
+            <div class="gate locked" id="g0-p"><div class="gate-ico gi-lock">🔒</div><div><div class="gate-q locked">Are you ready to send this to all brands?</div><div class="gate-sub">Locked — the two steps above must complete first.</div></div></div>
+          </div>
+
+          <div class="ar" id="ar0-check"><button class="bp" onclick="checkConflict0()">🛡️ Check for existing rules</button><button class="bsec">Save draft</button></div>
+          <div class="ar" id="ar0-legal" style="display:none"><button class="bp" onclick="sendLegal0()">📤 Send to legal for sign-off</button><button class="bsec">Save draft</button></div>
+          <div class="ar" id="ar0-publish" style="display:none"><button class="bp" onclick="publishGermany()">🚀 Publish to all brands</button><button class="bsec">Save draft</button></div>
+          <div id="ar0-note" class="role-note" style="display:none">ℹ️ <span id="ar0-note-msg"></span></div>
+
+          <div id="prop-0" style="display:none;margin-top:18px">
+            <div class="SL">🔀 Rule is now propagating</div>
+            <div class="staged">
+              <div class="sb done">✅ Booking.com<br><span style="font-size:11px">Live</span></div>
+              <div class="sa">→</div>
+              <div class="sb go">⏳ Agoda<br><span style="font-size:11px">Deploying</span></div>
+              <div class="sa">→</div>
+              <div class="sb wait">Priceline<br><span style="font-size:11px">Pending</span></div>
+              <div class="sa">→</div>
+              <div class="sb wait">KAYAK<br><span style="font-size:11px">Pending</span></div>
+              <button class="bred" style="margin-left:6px;flex-shrink:0" onclick="alert('Rollback initiated. Agoda deployment paused. Booking.com reverted to v1 (19%). Engineering notified.')">↩ Rollback</button>
+            </div>
+            <div style="margin-top:13px">
+              <div class="prop-step"><div class="pico" style="background:#e6f5d4;font-size:16px">✅</div><div><div class="pt">Legal sign-off complete</div><div class="pd">Confirmed by M. Brennan — rule matches §14 UStG amendment.</div><div class="pm"><span class="badge bs">Done</span></div></div></div>
+              <div class="prop-step"><div class="pico" style="background:#deedf8;font-size:16px">💻</div><div><div class="pt">Engineering deployment brief sent</div><div class="pd">3 API contracts, 2 data schemas updated. Deadline 25 Jul. Sent to tax-eng@booking.com.</div><div class="pm"><span class="badge bi">In progress</span></div></div></div>
+              <div class="prop-step"><div class="pico" style="background:#e6f5d4;font-size:16px">🧾</div><div><div class="pt">Finance reconciliation</div><div class="pd">Gap period: 0 transactions. Rule configured before effective date — no retroactive work needed.</div><div class="pm"><span class="badge bs">Clean</span></div></div></div>
+              <div class="prop-step"><div class="pico" style="background:#fdf0da;font-size:16px">📧</div><div><div class="pt">Merchant notification drafted</div><div class="pd">"VAT changes 19%→21% from 1 Aug. Est. impact: −€202/month." Pending review before send.</div><div class="pm"><span class="badge bw">Pending review</span><button class="bsec" style="font-size:12px;padding:3px 10px;margin-left:6px">Review draft</button></div></div></div>
+              <div class="prop-step"><div class="pico" style="background:#f0f0ec;font-size:16px">📋</div><div><div class="pt">Audit trail — always on</div><div class="pd">Configured by R. Shah, approved by M. Brennan, published by S. Patel. Exportable for regulators.</div><div class="pm"><span class="badge bn">Always on</span><button class="bsec" style="font-size:12px;padding:3px 10px;margin-left:6px" onclick="alert('Downloaded: audit_DE-VAT-B2B-2026.csv')">⬇ Export</button></div></div></div>
+            </div>
+          </div>
+
+          <div style="margin-top:15px">
+            <div class="SL">📜 Version history</div>
+            <div id="vh-override">
+              <div class="vrow"><div class="vdot" style="background:#3d8010"></div><span style="font-weight:700">v2 — pending</span><span style="color:#666;flex:1;margin-left:9px">Rate: 21% · Effective 1 Aug 2026</span><span style="font-size:12px;color:#aaa">Today</span></div>
+              <div class="vrow"><div class="vdot" style="background:#185FA5"></div><span style="font-weight:700">v1 — active</span><span style="color:#666;flex:1;margin-left:9px">Rate: 19% · Since Jan 2020</span><span style="font-size:12px;color:#aaa">Archived on publish</span></div>
+            </div>
+            <div id="vh-extend" style="display:none">
+              <div class="vrow"><div class="vdot" style="background:#3d8010"></div><span style="font-weight:700">DE-VAT-B2B-2020 — updated in place</span><span style="color:#666;flex:1;margin-left:9px">Rate updated 19%→21% · Effective 1 Aug 2026</span><span style="font-size:12px;color:#aaa">Today</span></div>
+              <div class="vrow" style="padding-left:19px"><div class="vdot" style="background:#ccc"></div><span style="font-size:12px;color:#aaa">Historical: 19% · Jan 2020 – 31 Jul 2026 · Preserved for audit</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- USA -->
+        <div id="panel-1" style="display:none">
+          <div class="panel-title">Configuring — USA Withholding Tax · Foreign accommodation partners</div>
+          <div class="ai-box">
+            <div class="ai-hd">🤖 AI-extracted fields from IRS Notice 2026-14. Confirm each field before proceeding. Any change will be flagged for legal review.</div>
+            <div class="field-block">
+              <div class="field-top"><span class="field-lbl">New WHT threshold</span><input class="field-inp pre" id="f1-thresh" type="number" value="600" oninput="flagChanged(this,'600','f1-warn-thresh','f1-src-thresh')"><span class="conf ch">High confidence</span></div>
+              <div class="field-src" id="f1-src-thresh">📄 IRS Notice 2026-14, Section 3(b) · <a>view source</a></div>
+              <div class="field-warn" id="f1-warn-thresh" style="display:none">⚠️ Changed from extracted value of $600. Legal will verify.</div>
+            </div>
+            <div class="field-block">
+              <div class="field-top"><span class="field-lbl">WHT rate</span><input class="field-inp pre" id="f1-rate" type="number" value="30" oninput="flagChanged(this,'30','f1-warn-rate','f1-src-rate')"><span class="conf ch">High confidence</span></div>
+              <div class="field-src" id="f1-src-rate">📄 IRC §1441, confirmed in Notice 2026-14 · <a>view source</a></div>
+              <div class="field-warn" id="f1-warn-rate" style="display:none">⚠️ Changed from extracted value of 30%. Legal will verify.</div>
+            </div>
+            <div class="field-block">
+              <div class="field-top"><span class="field-lbl">Effective date</span><input class="field-inp pre" id="f1-date" type="date" value="2026-10-01" oninput="flagChanged(this,'2026-10-01','f1-warn-date','f1-src-date')"><span class="conf ch">High confidence</span></div>
+              <div class="field-src" id="f1-src-date">📄 Notice 2026-14, Section 5 · <a>view source</a></div>
+              <div class="field-warn" id="f1-warn-date" style="display:none">⚠️ Changed from extracted date. Legal will verify.</div>
+            </div>
+            <div class="field-block">
+              <div class="field-top"><span class="field-lbl">Treaty eligible</span><select class="field-inp" style="border-color:#d4891a;background:#fdf5e4"><option>Yes — W-8BEN required</option><option>No</option></select><span class="conf cm">Review needed</span></div>
+              <div class="field-review">⚠️ Treaty eligibility varies by partner country. Confirm with legal which treaty networks apply.</div>
+            </div>
+          </div>
+          <div class="ig">
+            <div class="ic"><div class="in">8,400</div><div class="il">Partners affected</div></div>
+            <div class="ic"><div class="in">$1.4M</div><div class="il">Monthly payout delta</div></div>
+            <div class="ic"><div class="in">4</div><div class="il">Brands in scope</div></div>
+          </div>
+          <div class="fg">
+            <div><div class="fl">Partner type</div><select class="fsel"><option>Foreign accommodation partners</option><option>All foreign partners</option></select></div>
+            <div><div class="fl">Residency</div><select class="fsel"><option>Non-US resident partners</option><option>All partners</option></select></div>
+          </div>
+          <div id="usa-no-conflict" style="display:none;background:#e6f5d4;border:1px solid #7ab840;border-radius:9px;padding:12px 14px;font-size:13px;color:#2a5c06;margin-top:11px;font-weight:500">✅ No conflicting rules found for USA WHT · Foreign accommodation partners. Safe to proceed to legal sign-off.</div>
+          <div id="gates-1" style="display:none;margin:15px 0">
+            <div class="gates-title">Before this rule goes live</div>
+            <div class="gate done"><div class="gate-ico gi-done">✓</div><div><div class="gate-q done">Has the conflict check been completed?</div><div class="gate-sub">No conflicting rules found. Safe to proceed.</div></div></div>
+            <div class="gate wait" id="g1-l"><div class="gate-ico gi-wait">⏱</div><div><div class="gate-q wait">Has legal confirmed this matches the regulation?</div><div class="gate-sub" id="g1-l-sub">Not yet. Sign-off needed from legal.</div></div></div>
+            <div class="gate locked" id="g1-p"><div class="gate-ico gi-lock">🔒</div><div><div class="gate-q locked">Are you ready to send this to all brands?</div><div class="gate-sub">Locked until legal sign-off completes.</div></div></div>
+          </div>
+          <div id="ar1-note" class="role-note" style="display:none">ℹ️ <span id="ar1-note-msg"></span></div>
+          <div class="ar" id="ar1-check"><button class="bp" onclick="checkConflict1()">🛡️ Check for existing rules</button><button class="bsec">Save draft</button></div>
+          <div class="ar" id="ar1-legal" style="display:none"><button class="bp" onclick="sendLegal1()">📤 Send to legal for sign-off</button><button class="bsec">Save draft</button></div>
+          <div class="ar" id="ar1-publish" style="display:none"><button class="bp" onclick="publishUSA()">🚀 Publish to all brands</button><button class="bsec">Save draft</button></div>
+          <div id="prop-1" style="display:none;margin-top:18px">
+            <div class="SL">🔀 Rule is now propagating</div>
+            <div class="staged">
+              <div class="sb done">✅ Booking.com<br><span style="font-size:11px">Live</span></div>
+              <div class="sa">→</div><div class="sb go">⏳ Agoda<br><span style="font-size:11px">Deploying</span></div>
+              <div class="sa">→</div><div class="sb wait">Priceline<br><span style="font-size:11px">Pending</span></div>
+              <div class="sa">→</div><div class="sb wait">KAYAK<br><span style="font-size:11px">Pending</span></div>
+              <button class="bred" style="margin-left:6px;flex-shrink:0" onclick="alert('Rollback initiated.')">↩ Rollback</button>
+            </div>
+            <div style="margin-top:11px;font-size:13px;color:#666;line-height:1.6">Engineering deployment brief sent · 2 API contracts updated · Deadline 15 Sep · Merchant notifications pending review.</div>
+          </div>
+          <div style="margin-top:15px"><div class="SL">📜 Version history</div>
+            <div class="vrow"><div class="vdot" style="background:#3d8010"></div><span style="font-weight:700">v1 — draft</span><span style="color:#666;flex:1;margin-left:9px">Threshold: $600 · WHT: 30% · Effective 1 Oct 2026</span><span style="font-size:12px;color:#aaa">Today</span></div>
+          </div>
+        </div>
+
+        <!-- INDIA -->
+        <div id="panel-2" style="display:none">
+          <div class="success-box">
+            <span style="font-size:22px;flex-shrink:0;margin-top:1px">✅</span>
+            <div>
+              <div style="font-size:15px;font-weight:700;color:#27500A;margin-bottom:4px;letter-spacing:-0.02em">India GST — fully configured and live since 1 May 2026</div>
+              <div style="font-size:13px;color:#2a5c06;line-height:1.6">Rule IN-GST-TCS-2026 active across all brands. Published 2 May 2026 by S. Patel. Legal sign-off by R. Kumar. No conflicts at publish. No gap-period transactions.</div>
+            </div>
+          </div>
+          <div class="ig">
+            <div class="ic"><div class="in">22,100</div><div class="il">Merchants on new rule</div></div>
+            <div class="ic"><div class="in">₹4.2Cr</div><div class="il">Monthly TCS collected</div></div>
+            <div class="ic"><div class="in">3</div><div class="il">Brands live</div></div>
+          </div>
+          <div class="fg">
+            <div><div class="fl">Current TCS rate</div><input class="fi" value="1%" disabled style="opacity:0.55"></div>
+            <div><div class="fl">Effective since</div><input class="fi" value="1 May 2026" disabled style="opacity:0.55"></div>
+          </div>
+          <div style="margin-top:15px"><div class="SL">📜 Version history</div>
+            <div class="vrow"><div class="vdot" style="background:#3d8010"></div><span style="font-weight:700">v2 — active</span><span style="color:#666;flex:1;margin-left:9px">TCS: 1% · Effective 1 May 2026</span><span style="font-size:12px;color:#aaa">2 May 2026</span></div>
+            <div class="vrow"><div class="vdot" style="background:#ccc"></div><span style="font-weight:700;color:#aaa">v1 — archived</span><span style="color:#aaa;flex:1;margin-left:9px">TCS: 0.5% · Jan 2021 – Apr 2026</span><span style="font-size:12px;color:#bbb">Archived</span></div>
+          </div>
+          <div style="margin-top:15px"><div class="SL">📋 Audit trail</div>
+            <div style="font-size:13px;color:#666;line-height:1.8">Configured by R. Nair (Tax Analyst) · Legal sign-off by R. Kumar · Published by S. Patel (Compliance Lead) · All brands confirmed live by 3 May 2026.
+            <button class="bsec" style="font-size:12px;padding:3px 11px;margin-left:9px" onclick="alert('Downloaded: audit_IN-GST-TCS-2026.csv')">⬇ Export</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROLLUP -->
+  <div class="isc" id="isc-rollup">
+    <div class="rm-grid">
+      <div class="rmc"><div class="rmn">47</div><div class="rml">Jurisdictions active</div></div>
+      <div class="rmc"><div class="rmn" style="color:#8c1a1a">3</div><div class="rml">Pending rule changes</div></div>
+      <div class="rmc"><div class="rmn" style="color:#7a4500">€1.2M</div><div class="rml">Liability exposure</div></div>
+      <div class="rmc"><div class="rmn" style="color:#2a5c06">94%</div><div class="rml">Fully configured</div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><span style="font-size:15px;font-weight:700;color:#1a1a1a;letter-spacing:-0.02em">Brand × jurisdiction propagation</span><span class="badge bw">Germany VAT pending</span></div>
+      <div class="brow" style="padding-bottom:5px">
+        <div class="bn-n" style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.06em;font-weight:700">Brand</div>
+        <div style="flex:1;font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.06em;font-weight:700">Status</div>
+        <div style="width:66px;font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;text-align:right">Coverage</div>
+      </div>
+      <div class="brow"><div class="bn-n">Booking.com</div><div class="jpills"><span class="jp" style="background:#e6f5d4;color:#2a5c06">DE ✓</span><span class="jp" style="background:#e6f5d4;color:#2a5c06">US ✓</span><span class="jp" style="background:#e6f5d4;color:#2a5c06">IN ✓</span><span class="jp" style="background:#fdf0da;color:#7a4500">DE v2 pending</span></div><div style="text-align:right"><div class="pbw" style="margin-left:auto"><div class="pbf" style="width:92%;background:#3d8010"></div></div><div style="font-size:12px;color:#777;margin-top:3px;font-weight:600">92%</div></div></div>
+      <div class="brow"><div class="bn-n">Agoda</div><div class="jpills"><span class="jp" style="background:#fde6e6;color:#8c1a1a">DE ✗</span><span class="jp" style="background:#e6f5d4;color:#2a5c06">US ✓</span><span class="jp" style="background:#e6f5d4;color:#2a5c06">IN ✓</span></div><div style="text-align:right"><div class="pbw" style="margin-left:auto"><div class="pbf" style="width:71%;background:#c07010"></div></div><div style="font-size:12px;color:#777;margin-top:3px;font-weight:600">71%</div></div></div>
+      <div class="brow"><div class="bn-n">Priceline</div><div class="jpills"><span class="jp" style="background:#fde6e6;color:#8c1a1a">DE ✗</span><span class="jp" style="background:#fdf0da;color:#7a4500">US pending</span><span class="jp" style="background:#e6f5d4;color:#2a5c06">IN ✓</span></div><div style="text-align:right"><div class="pbw" style="margin-left:auto"><div class="pbf" style="width:58%;background:#b02010"></div></div><div style="font-size:12px;color:#777;margin-top:3px;font-weight:600">58%</div></div></div>
+      <div class="brow"><div class="bn-n">KAYAK</div><div class="jpills"><span class="jp" style="background:#e6f5d4;color:#2a5c06">DE ✓</span><span class="jp" style="background:#e6f5d4;color:#2a5c06">US ✓</span><span class="jp" style="background:#fdf0da;color:#7a4500">IN pending</span></div><div style="text-align:right"><div class="pbw" style="margin-left:auto"><div class="pbf" style="width:85%;background:#3d8010"></div></div><div style="font-size:12px;color:#777;margin-top:3px;font-weight:600">85%</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><span style="font-size:15px;font-weight:700;color:#1a1a1a;letter-spacing:-0.02em">Legal entity consolidated position — Q2 2026</span><button class="bsec" style="font-size:12px;padding:5px 13px" onclick="alert('Downloaded: consolidated_tax_Q2_2026.xlsx')">⬇ Export for audit</button></div>
+      <table class="etable">
+        <thead><tr><th style="width:32%">Entity</th><th>Collected</th><th>Remitted</th><th>Gap</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700">BV Netherlands</td><td>€14.2M</td><td>€14.2M</td><td style="color:#2a5c06;font-weight:600">€0</td><td><span class="badge bs">Compliant</span></td></tr>
+          <tr><td style="font-weight:700">Agoda Thailand</td><td>€3.8M</td><td>€2.6M</td><td style="color:#8c1a1a;font-weight:700">€1.2M</td><td><span class="badge bd">Gap</span></td></tr>
+          <tr><td style="font-weight:700">Priceline USA</td><td>€6.1M</td><td>€6.1M</td><td style="color:#2a5c06;font-weight:600">€0</td><td><span class="badge bs">Compliant</span></td></tr>
+        </tbody>
+      </table>
+      <div style="background:#fde6e6;border-radius:9px;padding:12px 14px;margin-top:13px;font-size:13px;color:#8c1a1a;display:flex;align-items:center;gap:9px;font-weight:500">
+        ⚠️ 2,840 transactions at wrong rate — Agoda Thailand · DE gap period.
+        <span style="color:#185FA5;cursor:pointer;font-weight:700;margin-left:5px;white-space:nowrap" onclick="openModal('modal-reconcile')">View reconciliation workflow →</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MERCHANT PORTAL -->
+<div class="ctx" id="ctx-m-panel">
+  <div class="m-bar">
+    <div style="display:flex;align-items:center;gap:11px">
+      <div class="mav">HG</div>
+      <div>
+        <div style="font-size:15px;font-weight:700;color:#27500A;letter-spacing:-0.02em">Hotel Gruppe München GmbH</div>
+        <div style="font-size:12px;color:#3a6b10;font-weight:500">B2B · Germany · VAT registered · Partner since 2019</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:9px">
+      <select class="rsel" style="border-color:#97C459;color:#27500A" onchange="switchMonth(this.value)">
+        <option value="jun">June 2026</option><option value="may">May 2026</option><option value="apr">April 2026</option>
+      </select>
+      <span class="badge bw">⚠️ Rate change Aug 2026</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:18px">
+    <div>
+      <div class="card">
+        <div class="card-hd"><span style="font-size:15px;font-weight:700;color:#1a1a1a;letter-spacing:-0.02em" id="m-title">June 2026 payout</span><span class="badge bi">Booking.com</span></div>
+        <div class="pr"><span class="pl">Gross booking value</span><span class="pv" id="m-gross">€84,200.00</span></div>
+        <div class="pr"><span class="pl">Platform commission (12%)</span><span class="pn" id="m-comm">−€10,104.00</span></div>
+        <div class="pr"><span class="pl" id="m-vat-lbl">VAT on commission (19% current)</span><span class="pn" id="m-vat">−€1,919.76</span></div>
+        <div class="pr"><span class="pl">VAT input credit (B2B eligible)</span><span class="pp" id="m-credit">+€1,919.76</span></div>
+        <div style="border-top:1.5px solid #e4e4e0;margin:10px 0"></div>
+        <div class="pr"><span style="font-size:15px;font-weight:700;color:#1a1a1a">Net payout</span><span style="font-size:18px;font-weight:700;color:#1a1a1a;letter-spacing:-0.03em" id="m-net">€74,096.00</span></div>
+        <div id="m-notice" class="notice" style="background:#fdf0da;color:#7a4500">ℹ️ From 1 Aug 2026, VAT changes to 21%. Est. monthly impact on future payouts: <strong>−€202</strong>.</div>
+      </div>
+      <div class="card">
+        <div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:14px;letter-spacing:-0.02em">Payout history</div>
+        <div class="hrow"><span style="color:#666;font-weight:500">June 2026</span><span style="font-weight:700">€74,096</span><span class="badge bs">Paid</span></div>
+        <div class="hrow"><span style="color:#666;font-weight:500">May 2026</span><span style="font-weight:700">€71,368</span><span class="badge bs">Paid</span></div>
+        <div class="hrow"><span style="color:#666;font-weight:500">April 2026</span><span style="font-weight:700">€69,080</span><span class="badge bs">Paid</span></div>
+        <div style="margin-top:11px;font-size:13px;display:flex;align-items:center;gap:6px;color:#185FA5;cursor:pointer;font-weight:600" onclick="alert('Downloaded: HG_München_statement_2026.pdf')">⬇ Download full statement (PDF)</div>
+      </div>
+    </div>
+    <div>
+      <div class="SL">💡 Tax optimisation opportunities</div>
+      <div class="ocard">
+        <div class="oico" style="background:#deedf8;font-size:20px">📜</div>
+        <div style="flex:1">
+          <div class="ot">VAT exemption certificate</div>
+          <div class="od">Your entity qualifies for intra-EU VAT exemption on cross-border digital services. Upload your VAT ID certificate to apply zero-rate treatment.</div>
+          <div class="ov">Saves est. €1,919/month</div>
+          <button class="bp" style="margin-top:10px;font-size:12px;padding:6px 15px;box-shadow:none" onclick="uploadCert()">⬆ Upload certificate</button>
+          <div id="cert-track" style="display:none;background:#f8f8f5;border-radius:9px;padding:11px;margin-top:11px;border:1px solid #e4e4e0">
+            <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:7px;text-transform:uppercase;letter-spacing:0.05em">Certificate status</div>
+            <div class="cert-steps"><div class="cs done">Submitted</div><div style="font-size:12px;color:#ccc">→</div><div class="cs go">Under review</div><div style="font-size:12px;color:#ccc">→</div><div class="cs todo">Approved</div><div style="font-size:12px;color:#ccc">→</div><div class="cs todo">Rate updated</div></div>
+            <div style="font-size:12px;color:#666;margin-top:8px;font-weight:500">⏱ Est. 3 business days · tax-compliance@booking.com</div>
+          </div>
+        </div>
+      </div>
+      <div class="ocard">
+        <div class="oico" style="background:#e6f5d4;font-size:20px">✅</div>
+        <div style="flex:1"><div class="ot">Entity status — B2B confirmed</div><div class="od">Your B2B classification is correct. B2C would remove input credit eligibility, costing you an extra €1,919/month.</div><div class="ov" style="color:#185FA5">No action needed</div></div>
+      </div>
+      <div class="ocard">
+        <div class="oico" style="background:#fdf0da;font-size:20px">⚖️</div>
+        <div style="flex:1"><div class="ot">Germany–Netherlands treaty override</div><div class="od">Netherlands-registered entities may qualify for reduced 5% WHT under DE-NL treaty instead of standard 15%.</div><div class="ov">Saves est. €640/month if applicable</div>
+        <button class="bsec" style="margin-top:10px;font-size:12px;padding:6px 15px" onclick="openModal('modal-treaty')">Check eligibility</button></div>
+      </div>
+      <div class="ocard">
+        <div class="oico" style="background:#fde6e6;font-size:20px">🚩</div>
+        <div style="flex:1"><div class="ot">Dispute a deduction</div><div class="od">If a payout deduction looks incorrect, raise a dispute. Our tax team reviews within 5 business days.</div>
+        <button class="bsec" style="margin-top:10px;font-size:12px;padding:6px 15px" onclick="openModal('modal-dispute')">Raise dispute</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+var role='analyst';
+var p0={cResolved:false,lDone:false,pub:false,res:null};
+var p1={cChecked:false,lDone:false,pub:false};
+
+function switchCtx(c){
+  document.querySelectorAll('.ctx').forEach(x=>x.classList.remove('active'));
+  document.getElementById('ctx-'+c+'-panel').classList.add('active');
+  document.getElementById('ctx-i').className='ctx-btn'+(c==='i'?' ai':'');
+  document.getElementById('ctx-m').className='ctx-btn'+(c==='m'?' am':'');
+}
+function switchITab(name,el){
+  document.querySelectorAll('.isc').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.itab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('isc-'+name).classList.add('active');
+  el.classList.add('active');
+}
+function setRole(r){role=r;renderP0();renderP1();}
+
+function renderP0(){
+  var ac=document.getElementById('ar0-check'),al=document.getElementById('ar0-legal'),ap=document.getElementById('ar0-publish'),an=document.getElementById('ar0-note'),msg=document.getElementById('ar0-note-msg');
+  ac.style.display='none';al.style.display='none';ap.style.display='none';an.style.display='none';
+  if(role==='legal'){an.style.display='flex';msg.textContent='You are logged in as Legal reviewer. You can confirm sign-off requests but cannot configure or publish rules.';return;}
+  if(!p0.cResolved){ac.style.display='flex';return;}
+  if(!p0.lDone){
+    if(role==='lead')al.style.display='flex';
+    else{an.style.display='flex';msg.textContent='Conflict resolved. A compliance lead must send for legal sign-off before publishing.';}
+    return;
+  }
+  if(!p0.pub){
+    if(role==='lead')ap.style.display='flex';
+    else{an.style.display='flex';msg.textContent='Legal sign-off complete. A compliance lead can now publish this rule.';}
+  }
+}
+function renderP1(){
+  var ac=document.getElementById('ar1-check'),al=document.getElementById('ar1-legal'),ap=document.getElementById('ar1-publish'),an=document.getElementById('ar1-note'),msg=document.getElementById('ar1-note-msg');
+  ac.style.display='none';al.style.display='none';ap.style.display='none';an.style.display='none';
+  if(role==='legal'){an.style.display='flex';msg.textContent='You are logged in as Legal reviewer. You can confirm sign-off requests but cannot configure or publish rules.';return;}
+  if(!p1.cChecked){ac.style.display='flex';return;}
+  if(!p1.lDone){
+    if(role==='lead')al.style.display='flex';
+    else{an.style.display='flex';msg.textContent='No conflicts found. A compliance lead must send for legal sign-off.';}
+    return;
+  }
+  if(!p1.pub){
+    if(role==='lead')ap.style.display='flex';
+    else{an.style.display='flex';msg.textContent='Legal sign-off complete. A compliance lead can now publish this rule.';}
+  }
+}
+
+function filterQ(v){
+  var items=document.querySelectorAll('.qi'),any=false;
+  items.forEach(el=>{
+    var show=el.querySelector('.qi-title').textContent.toLowerCase().includes(v.toLowerCase())||v==='';
+    el.style.display=show?'flex':'none';
+    if(show)any=true;
+  });
+  document.getElementById('q-empty').style.display=(!any&&v!=='')?'block':'none';
+}
+function setF(s,el){
+  document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  var any=false;
+  document.querySelectorAll('.qi').forEach(item=>{
+    var show=s==='all'||item.dataset.s===s;
+    item.style.display=show?'flex':'none';
+    if(show)any=true;
+  });
+  document.getElementById('q-empty').style.display=any?'none':'block';
+}
+function selQ(i,el){
+  document.querySelectorAll('.qi').forEach(q=>q.classList.remove('sel'));
+  el.classList.add('sel');
+  [0,1,2].forEach(n=>document.getElementById('panel-'+n).style.display=n===i?'block':'none');
+  if(i===0)renderP0();
+  if(i===1)renderP1();
+}
+
+function flagChanged(input,orig,wId,sId){
+  var changed=input.value.toString()!==orig.toString();
+  input.className='field-inp'+(changed?' changed':' pre');
+  document.getElementById(wId).style.display=changed?'flex':'none';
+  document.getElementById(sId).style.display=changed?'none':'flex';
+}
+
+var impactData={
+  b2b:{digital:{m:'14,200',d:'€2.1M',b:3},physical:{m:'3,400',d:'€0.5M',b:2},accommodation:{m:'8,900',d:'€1.3M',b:3}},
+  b2c:{digital:{m:'22,000',d:'€3.8M',b:4},physical:{m:'5,100',d:'€0.8M',b:2},accommodation:{m:'14,000',d:'€2.2M',b:4}},
+  both:{digital:{m:'36,200',d:'€5.9M',b:4},physical:{m:'8,500',d:'€1.3M',b:3},accommodation:{m:'22,900',d:'€3.5M',b:4}}
+};
+var curE='b2b',curS='digital';
+function updateImpact(val,field){
+  if(field==='entity')curE=val;
+  if(field==='service')curS=val;
+  var d=impactData[curE][curS];
+  document.getElementById('i0-m').textContent=d.m;
+  document.getElementById('i0-d').textContent=d.d;
+  document.getElementById('i0-b').textContent=d.b;
+  var scopeMap={b2b:{digital:'B2B digital services',physical:'B2B physical goods',accommodation:'B2B accommodation'},b2c:{digital:'B2C digital services',physical:'B2C physical goods',accommodation:'B2C accommodation'},both:{digital:'B2B + B2C digital services',physical:'B2B + B2C physical goods',accommodation:'B2B + B2C accommodation'}};
+  document.getElementById('f0-scope').options[0].text=scopeMap[curE][curS];
+}
+
+function checkConflict0(){
+  document.getElementById('conflict-0').style.display='block';
+  document.getElementById('ar0-check').style.display='none';
+}
+function resolveConflict(method){
+  p0.cResolved=true;p0.res=method;
+  document.getElementById('conflict-0').style.display='none';
+  document.getElementById('gates-0').style.display='block';
+  var sub=method==='override'?'Yes — existing rule DE-VAT-B2B-2020 deactivated on 1 Aug 2026. All future transactions use new rule. Historical transactions remain on old rate for audit.':'Yes — existing rule DE-VAT-B2B-2020 updated in place. Single rule ID preserved. Full transaction history maintained.';
+  document.getElementById('g0-c-sub').textContent=sub;
+  document.getElementById('vh-override').style.display=method==='override'?'block':'none';
+  document.getElementById('vh-extend').style.display=method==='merge'?'block':'none';
+  renderP0();
+}
+function sendLegal0(){
+  document.getElementById('ar0-legal').style.display='none';
+  document.getElementById('g0-l-sub').textContent='Sent to M. Brennan (Legal) — awaiting confirmation...';
+  setTimeout(()=>{
+    p0.lDone=true;
+    show('t-legal0');
+    var gl=document.getElementById('g0-l');
+    gl.className='gate done';gl.querySelector('.gate-ico').className='gate-ico gi-done';gl.querySelector('.gate-ico').textContent='✓';
+    gl.querySelector('.gate-q').className='gate-q done';gl.querySelector('.gate-sub').textContent='Yes — M. Brennan confirmed this matches §14 UStG amendment.';
+    var gp=document.getElementById('g0-p');
+    gp.className='gate done';gp.querySelector('.gate-ico').className='gate-ico gi-done';gp.querySelector('.gate-ico').textContent='✓';
+    gp.querySelector('.gate-q').className='gate-q done';gp.querySelector('.gate-q').textContent='All checks complete — ready to publish to all brands.';
+    renderP0();
+  },2000);
+}
+function publishGermany(){
+  p0.pub=true;
+  show('t-success');
+  document.getElementById('prop-0').style.display='block';
+  renderP0();
+  setTimeout(()=>hide('t-success'),5000);
+}
+function checkConflict1(){
+  p1.cChecked=true;
+  document.getElementById('ar1-check').style.display='none';
+  document.getElementById('usa-no-conflict').style.display='block';
+  document.getElementById('gates-1').style.display='block';
+  renderP1();
+}
+function sendLegal1(){
+  document.getElementById('ar1-legal').style.display='none';
+  document.getElementById('g1-l-sub').textContent='Sent to M. Brennan (Legal) — awaiting confirmation...';
+  setTimeout(()=>{
+    p1.lDone=true;
+    show('t-legal1');
+    var gl=document.getElementById('g1-l');
+    gl.className='gate done';gl.querySelector('.gate-ico').className='gate-ico gi-done';gl.querySelector('.gate-ico').textContent='✓';
+    gl.querySelector('.gate-q').className='gate-q done';gl.querySelector('.gate-sub').textContent='Yes — M. Brennan confirmed this matches IRS Notice 2026-14.';
+    var gp=document.getElementById('g1-p');
+    gp.className='gate done';gp.querySelector('.gate-ico').className='gate-ico gi-done';gp.querySelector('.gate-ico').textContent='✓';
+    gp.querySelector('.gate-q').className='gate-q done';gp.querySelector('.gate-q').textContent='All checks complete — ready to publish to all brands.';
+    renderP1();
+  },2000);
+}
+function publishUSA(){
+  p1.pub=true;
+  show('t-success');
+  document.getElementById('prop-1').style.display='block';
+  renderP1();
+  setTimeout(()=>hide('t-success'),5000);
+}
+
+function show(id){var el=document.getElementById(id);el.classList.add('show');setTimeout(()=>el.classList.remove('show'),4000);}
+function hide(id){document.getElementById(id).classList.remove('show');}
+function openModal(id){document.getElementById(id).classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+function uploadCert(){document.getElementById('cert-track').style.display='block';}
+
+var payouts={
+  jun:{title:'June 2026 payout',gross:'€84,200.00',comm:'−€10,104.00',vatLbl:'VAT on commission (19% current)',vat:'−€1,919.76',credit:'+€1,919.76',net:'€74,096.00',noticeHtml:'ℹ️ From 1 Aug 2026, VAT changes to 21%. Est. monthly impact on future payouts: <strong>−€202</strong>.',noticeBg:'background:#fdf0da;color:#7a4500'},
+  may:{title:'May 2026 payout',gross:'€81,100.00',comm:'−€9,732.00',vatLbl:'VAT on commission (19% current)',vat:'−€1,849.08',credit:'+€1,849.08',net:'€71,368.00',noticeHtml:'ℹ️ This payout was processed at the current rate of 19%. The August rate change does not affect this payout.',noticeBg:'background:#deedf8;color:#0a3d6e'},
+  apr:{title:'April 2026 payout',gross:'€78,500.00',comm:'−€9,420.00',vatLbl:'VAT on commission (19% current)',vat:'−€1,789.80',credit:'+€1,789.80',net:'€69,080.00',noticeHtml:'ℹ️ This payout was processed at the current rate of 19%. The August rate change does not affect this payout.',noticeBg:'background:#deedf8;color:#0a3d6e'}
+};
+function switchMonth(m){
+  var d=payouts[m];
+  document.getElementById('m-title').textContent=d.title;
+  document.getElementById('m-gross').textContent=d.gross;
+  document.getElementById('m-comm').textContent=d.comm;
+  document.getElementById('m-vat-lbl').textContent=d.vatLbl;
+  document.getElementById('m-vat').textContent=d.vat;
+  document.getElementById('m-credit').textContent=d.credit;
+  document.getElementById('m-net').textContent=d.net;
+  var n=document.getElementById('m-notice');
+  n.innerHTML=d.noticeHtml;
+  n.style.cssText='border-radius:9px;padding:11px 13px;margin-top:13px;font-size:13px;font-weight:500;'+d.noticeBg;
+}
+
+document.getElementById('panel-1').style.display='none';
+document.getElementById('panel-2').style.display='none';
+renderP0();renderP1();
+</script>
+</body>
+</html>
